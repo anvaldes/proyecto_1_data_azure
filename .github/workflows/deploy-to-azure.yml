@@ -1,0 +1,51 @@
+name: Deploy Azure Function Docker
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'main_function/**'
+      - 'utils_blob.py'
+      - 'Dockerfile'
+      - 'requirements.txt'
+
+env:
+  ACR_NAME: acrbeto0622
+  IMAGE_NAME: proyecto-1-data-image
+  FUNCTION_NAME: p1-data-beto0622
+  RESOURCE_GROUP: rg-proyecto1
+  AZURE_REGION: eastus  # o centralus según tengas configurado
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Login to Azure
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+    - name: Login to Azure Container Registry
+      run: |
+        az acr login --name $ACR_NAME
+
+    - name: Build and tag Docker image
+      run: |
+        docker buildx build \
+          --platform linux/amd64 \
+          -t $ACR_NAME.azurecr.io/$IMAGE_NAME:latest \
+          --load .
+
+    - name: Push Docker image to ACR
+      run: |
+        docker push $ACR_NAME.azurecr.io/$IMAGE_NAME:latest
+
+    - name: Restart Azure Function App
+      run: |
+        az functionapp restart \
+          --name $FUNCTION_NAME \
+          --resource-group $RESOURCE_GROUP

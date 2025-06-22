@@ -3,8 +3,6 @@ from azure.storage.blob import BlobServiceClient, ContentSettings
 import pandas as pd
 from io import StringIO
 
-print("HOLAAAAAAAAAAAAAAAAAAA")
-
 # Obtener conexión desde variable de entorno
 BLOB_CONN_STR = os.getenv("BLOB_CONN_STR")
 if not BLOB_CONN_STR:
@@ -12,8 +10,6 @@ if not BLOB_CONN_STR:
 
 # Parámetros fijos
 CONTAINER_NAME = "data-pipeline-1"
-
-print("HOLAAAAAA 2")
 
 # Crear cliente de contenedor
 blob_service_client = BlobServiceClient.from_connection_string(BLOB_CONN_STR)

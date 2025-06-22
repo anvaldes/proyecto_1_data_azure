@@ -33,7 +33,7 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
             upload_df_to_blob(df, output_path)
             print(f"☁️ Subido: {output_path}")
 
-        return func.HttpResponse(f"✅ Pipeline completado para {year}-{month}", status_code=200)
+        return func.HttpResponse(f"✅ Pipeline completado para {year}-{month}. Beto V!", status_code=200)
 
     except Exception as e:
         print("❌ Error en ejecución:")
